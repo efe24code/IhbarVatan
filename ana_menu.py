@@ -1,40 +1,51 @@
-# KOMUTAN: PAŞA | 20 ARAÇ ENTEGRE | 3150+ SATIR
-import os, sys, time, subprocess, json
+# VA-ATAN SİBER GÜVENLİK ARACI | 22 MODÜL | M.K. ATATÜRK ANISINA
+import os, sys, time, subprocess, json, random
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
 
-# THT FORUM LİNKİ - ZORUNLU YÖNLENDİRME
+# FORUM BAĞLANTISI
 FORUM_LINK = "https://www.turkhackteam.org/konular/ay-yildiz-siber-guvenlik-tool-u.2082661/"
-print(f"\n[!] Hoşgeldin araç açılıyor... bilgi için forumu ziyaret etmeyi unutma ! ilgili konu = https://www.turkhackteam.org/konular/ay-yildiz-siber-guvenlik-tool-u.2082661/")
-time.sleep(1)  # 1 saniye beklet
+ATATURK_SOZLERI = [
+    "Yurtta sulh, cihanda sulh.",
+    "Beni Türk doktorlarına emanet ediniz.",
+    "Hayatta en hakiki mürşit ilimdir.",
+    "Egemenlik verilmez, alınır.",
+    "Milletimiz için, dava uğruna, her şeye katlanmaya hazırım.",
+    "Türk milletinin karakteri, yüksek Türk karakteridir.",
+    "Bir millet, savaş meydanlarında ne kadar zafer kazanırsa kazansın, o zaferin sürekli sonuçlar doğurabilmesi için, kültür meydanlarında da zafer kazanılması gerekir.",
+    "Umutsuz durumlar yoktur, umutsuz insanlar vardır."
+]
+
+print(f"\n{Fore.YELLOW}[!] VA-ATAN SİBER GÜVENLİK ARACI açılıyor...{Style.RESET_ALL}")
+print(f"\n{Fore.CYAN}M.K. ATATÜRK: {random.choice(ATATURK_SOZLERI)}{Style.RESET_ALL}")
+time.sleep(1)
 
 # ================================================
-VERSIYON = "5.1.0"
-GITHUB_USER = "ThT0AltayHR"
-GITHUB_URL = "https://github.com/" + GITHUB_USER + "/AY-YILDIZ-SIBER-KALKAN"
-GUNCELLEME_URL = "https://raw.githubusercontent.com/" + GITHUB_USER + "/AY-YILDIZ-SIBER-KALKAN/main/version.json"
+VERSIYON = "1.0.1"
+GITHUB_USER = "efe24code"
+GITHUB_URL = "https://github.com/" + GITHUB_USER + "/IhbarVatan"
+GUNCELLEME_URL = "https://raw.githubusercontent.com/" + GITHUB_USER + "/IhbarVatan/main/version.json"
+
 
 ANA_LOGO = f"""{Fore.CYAN}{Style.BRIGHT}
-        ████████████████████████████████████████████████████████████████████
-        █▄─▄▄▀█─▄▄─█▄─▄█─▄▄─█▄─▀█▄─▄█▄─▄▄─█▄─▄▄▀█▄─▄█▄─▄█─▄▄█─▄▄─█▄─▄▄─█
-        ██─▄─▄█─██─▄█▀██─█▄▀─███─▄▄▄██─▄─▄██─███─██─██▄─█─██─▄█▀█
-        ▀▄▄▀▄▄▄▄▀▄▄▄▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▀▀▀▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▄▄▄▄▄▀
+        ▄▀█ █ █ █▀█ █▄ █ █▀█   █▄ █ █▀█ █▄█ █▄█ █ █ █
+        █ █ █ █ █▀▀ █ ▀█ █▄█   █ ▀█ █▄█ █ █ █ █ █▀█
 
-                   ▄▄▄▄▄▄▄▄▄▄▄
-                   █▄─▄▄─█─▄▄─█▄─▄█─▄▄─█▄─▀█▄─▄█▄─▄▄─█▄─▄▄▀█
-                   ██─▄▄▄█─██─▄█▀██─█▄▀─███─▄▄▄██─▄─▄█
-                   ▀▄▄▄▀▀▀▄▄▄▄▀▄▄▄▀▄▄▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▀▀▀▄▄▀
+              ██   ██    ██████  ███    ██  ███    ██
+              ███ ███    ██   ██ ████   ██  ████   ██
+              ███████    ██████  ██ ██  ██  ██ ██  ██
+              ██ █ ██    ██   ██ ██  ██ ██  ██  ██ ██
+              ██   ██    ██████  ██   ████  ██   ████
 
         ████████████████████████████████████████████
-              S İ B E R T E H D İ T A N A L İ Z S U İ T E
-  ilgili forum  https://www.turkhackteam.org/konular/ay-yildiz-siber-guvenlik-tool-u.2082661/
-        █████████████████████████████████████████████████████████████████
+              VA-ATAN SİBER GÜVENLİK ARACI
+              "YURTTA SULH, CİHANDA SULH"
+        ████████████████████████████████████████████
 {Style.RESET_ALL}"""
 
-AYYILDIZ_DAMGA = f"""{Fore.WHITE}
-                              &-_____-₺
-                    (_____
-                    _____) -----------)
+ATATURK_IMZASI = f"""{Fore.WHITE}
+              "MUSTAFA KEMAL ATATÜRK"
+              1881 - 1938
 {Style.RESET_ALL}"""
 
 ARACLAR = {
@@ -100,18 +111,20 @@ def acilis_animasyonu():
 
     time.sleep(0.3)
 
-    for satir in AYYILDIZ_DAMGA.split('\n'):
+    for satir in ATATURK_IMZASI.split('\n'):
         print(satir)
         time.sleep(0.08)
 
     time.sleep(0.3)
 
+    soz = random.choice(ATATURK_SOZLERI)
     bilgiler = [
         f"{Fore.CYAN}{'='*70}",
         f"{Fore.WHITE} SÜRÜM: {Fore.GREEN}v{VERSIYON} STABLE",
-        f"{Fore.WHITE} KOMUTAN: {Fore.YELLOW}PAŞA",
-        f"{Fore.WHITE} ARAÇ SAYISI: {Fore.GREEN}20 MODÜL ENTEGRE",
+        f"{Fore.WHITE} GELİŞTİRİCİ: {Fore.YELLOW}efe24code",
+        f"{Fore.WHITE} ARAÇ SAYISI: {Fore.GREEN}22 MODÜL ENTEGRE",
         f"{Fore.WHITE} GITHUB: {Fore.CYAN}{GITHUB_URL}",
+        f"{Fore.YELLOW} ATATÜRK: \"{soz}\"",
         f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}"
     ]
 
@@ -120,7 +133,7 @@ def acilis_animasyonu():
         time.sleep(0.1)
 
     time.sleep(0.5)
-    print(f"\n{Fore.GREEN}[+] Sistem hazır Komutanım!{Style.RESET_ALL}")
+    print(f"\n{Fore.GREEN}[+] Sistem hazır! Vatanı korumaya başlayalım.{Style.RESET_ALL}")
     time.sleep(1)
 
 def ekran_temizle():
@@ -129,13 +142,14 @@ def ekran_temizle():
 def ana_menu_goster():
     ekran_temizle()
     print(ANA_LOGO)
-    print(AYYILDIZ_DAMGA)
+    print(ATATURK_IMZASI)
     print(f"{Fore.CYAN}{'='*70}")
-    print(f"{Fore.WHITE} ANA KONTROL PANELİ v{VERSIYON} | 22 ARAÇ AKTİF {Style.RESET_ALL}")
+    print(f"{Fore.WHITE} VA-ATAN ANA KONTROL PANELİ v{VERSIYON} | 22 ARAÇ AKTİF {Style.RESET_ALL}")
+    print(f"{Fore.YELLOW} \"{random.choice(ATATURK_SOZLERI)}\" {Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
 
     print(f"{Fore.RED}[A]{Fore.WHITE} 🚀 OTOMATİK TARAMA MODU - URL İSTEMEZ, KENDİ BULUR")
-    print(f"{Fore.GREEN}[1]{Fore.WHITE} SİBER KALKAN SUITE - Araç Menüsü")
+    print(f"{Fore.GREEN}[1]{Fore.WHITE} VA-ATAN ARAÇ MENÜSÜ - 22 Modül")
     print(f"{Fore.GREEN}[2]{Fore.WHITE} HAKKIMIZDA - Vizyon & Misyon")
     print(f"{Fore.GREEN}[3]{Fore.WHITE} GÜNCELLEME KONTROL - Yeni Sürüm")
     print(f"{Fore.GREEN}[Q]{Fore.WHITE} ÇIKIŞ{Style.RESET_ALL}")
@@ -147,7 +161,8 @@ def arac_menusu():
         ekran_temizle()
         print(ANA_LOGO)
         print(f"{Fore.CYAN}{'='*70}")
-        print(f"{Fore.WHITE} SİBER KALKAN SUITE - 22 ARAÇ {Style.RESET_ALL}")
+        print(f"{Fore.WHITE} VA-ATAN SİBER GÜVENLİK - 22 ARAÇ {Style.RESET_ALL}")
+        print(f"{Fore.YELLOW} \"{random.choice(ATATURK_SOZLERI)}\" {Style.RESET_ALL}")
         print(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
 
         for i in range(1, 23, 2):
@@ -215,13 +230,17 @@ def hakkinda():
     ekran_temizle()
     print(ANA_LOGO)
     print(f"{Fore.CYAN}{'='*70}")
-    print(f"{Fore.WHITE} HAKKIMIZDA {Style.RESET_ALL}")
+    print(f"{Fore.WHITE} HAKKIMIZDA - VA-ATAN SİBER GÜVENLİK {Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*70}{Style.RESET_ALL}\n")
-    print(f"{Fore.WHITE}AY-YILDIZ SİBER KALKAN, Türk milleti için geliştirilmiş")
-    print(f"{Fore.WHITE}%100 yerli ve milli siber güvenlik analiz aracıdır.")
-    print(f"\n{Fore.WHITE}Geliştirici: {Fore.YELLOW}ThT0AltayHR")
+    print(f"{Fore.WHITE}VA-ATAN, Türk milletinin siber güvenliğini korumak için")
+    print(f"{Fore.WHITE}geliştirilmiş %100 yerli ve milli bir siber güvenlik aracıdır.")
+    print(f"{Fore.WHITE}Mustafa Kemal Atatürk'ün 'Yurtta sulh, cihanda sulh' ilkesiyle,")
+    print(f"{Fore.WHITE}vatanımızı dijital tehditlere karşı korumayı hedefler.")
+    print(f"\n{Fore.WHITE}Geliştirici: {Fore.YELLOW}efe24code")
+    print(f"{Fore.WHITE}İlham: {Fore.YELLOW}Mustafa Kemal Atatürk")
     print(f"{Fore.WHITE}Forum: {Fore.CYAN}{FORUM_LINK}")
     print(f"{Fore.WHITE}GitHub: {Fore.CYAN}{GITHUB_URL}")
+    print(f"\n{Fore.YELLOW}\"Hayatta en hakiki mürşit ilimdir.\" - M.K. Atatürk{Style.RESET_ALL}")
     print(f"\n{Fore.CYAN}{'='*70}{Style.RESET_ALL}")
     input(f"\n{Fore.YELLOW}Ana menüye dönmek için Enter...{Style.RESET_ALL}")
 
@@ -274,7 +293,8 @@ def main():
         elif secim == '3':
             guncelleme_kontrol()
         elif secim == 'q':
-            print(f"\n{Fore.YELLOW}[!] AY-YILDIZ kapatılıyor...{Style.RESET_ALL}")
+            print(f"\n{Fore.YELLOW}[!] VA-ATAN kapatılıyor...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}\"Egemenlik verilmez, alınır.\" - M.K. Atatürk{Style.RESET_ALL}")
             time.sleep(1)
             break
         else:

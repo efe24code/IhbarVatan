@@ -18,10 +18,10 @@ VERSIYON = "5.2.2"
 
 BAYRAK = f"""{Fore.RED}
 ████████████████████████████████████████████████
-████████████████████████████████████████████████
-████████████████████████████████████████████████████████████████████████████████
-████████████████████████████████████████████████
-████████████████████████████████████████████████
+██                                            ██
+██     VA-ATAN SİBER GÜVENLİK ARACI          ██
+██     "Yurtta sulh, cihanda sulh"            ██
+██                                            ██
 ████████████████████████████████████████████████
 ████████████████████████████████████████████████████████████████████████████████
 ████████████████████████████████████████████████
@@ -71,13 +71,13 @@ def logo():
     print(BAYRAK)
     print(f"{Fore.RED}{'='*80}{Style.RESET_ALL}")
     print(f"{Fore.WHITE} USOM KONTROL MODÜLÜ v{VERSIYON} | BAYRAK: 2647 KARAKTER{Style.RESET_ALL}")
-    print(f"{Fore.RED} AY-YILDIZ SİBER KALKAN | T.C. ULAŞTIRMA BAKANLIĞI USOM ENTEGRASYON{Style.RESET_ALL}")
+    print(f"{Fore.RED} VA-ATAN SİBER GÜVENLİK | T.C. ULAŞTIRMA BAKANLIĞI USOM ENTEGRASYON{Style.RESET_ALL}")
     print(f"{Fore.RED}{'='*80}{Style.RESET_ALL}")
 
 def listeyi_guncelle():
     print(f"\n{Fore.YELLOW}[+] USOM zararlı listesi indiriliyor...{Style.RESET_ALL}")
     try:
-        headers = {'User-Agent': 'AY-YILDIZ-SIBER-KALKAN/5.2.2'}
+        headers = {'User-Agent': 'VA-ATAN-SIBER-GUVENLIK/1.0.0'}
         r = requests.get(USOM_URL, timeout=30, headers=headers)
         r.raise_for_status()
         os.makedirs("data", exist_ok=True)

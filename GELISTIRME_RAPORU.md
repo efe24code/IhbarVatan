@@ -1,7 +1,11 @@
-# AY-YILDIZ SİBER KALKAN - Geliştirme Raporu v2.0
+# VA-ATAN SİBER GÜVENLİK - Geliştirme Raporu v2.0
 
 ## Özet
-AY-YILDIZ SİBER KALKAN v5.1 siber güvenlik aracı tam kullanılabilir hale getirildi ve **OTOMATİK SAHTE SİTE TARAMA MODU** eklendi.
+VA-ATAN (IhbarVatan) siber güvenlik aracı, AY-YILDIZ SİBER KALKAN'dan fork'lanarak tam kullanılabilir hale getirildi ve **OTOMATİK SAHTE SİTE TARAMA MODU** eklendi.
+- **Geliştirici:** efe24code  
+**İlham:** Mustafa Kemal Atatürk (1881-1938)  
+**Fork Kaynağı:** AY-YILDIZ SİBER KALKAN (ThT0AltayHR)  
+- **GitHub:** https://github.com/efe24code/IhbarVatan
 
 ## 🚀 YENİ ÖZELLİKLER
 

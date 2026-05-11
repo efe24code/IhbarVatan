@@ -3,6 +3,16 @@ import os, sys, time, requests, json, threading
 from colorama import init, Fore, Style
 init(autoreset=True)
 
+import random
+
+ATATURK_SOZLERI = [
+    "Yurtta sulh, cihanda sulh.",
+    "Hayatta en hakiki mürşit ilimdir.",
+    "Egemenlik verilmez, alınır.",
+    "Türk milletinin karakteri, yüksek Türk karakteridir.",
+    "Umutsuz durumlar yoktur, umutsuz insanlar vardır."
+]
+
 VERSIYON = "1.0.0"
 ARAC_ADI = "OTOMATİK SAHTE SİTE TARAMASI"
 
@@ -33,14 +43,15 @@ def ekran_temizle():
 def logo():
     print(f"{Fore.CYAN}{'='*80}")
     print(f"{Fore.WHITE} {ARAC_ADI} v{VERSIYON}")
-    print(f"{Fore.CYAN} AY-YILDIZ SİBER KALKAN | OTOMATİK TEHDİT KEŞFİ")
+    print(f"{Fore.CYAN} VA-ATAN SİBER GÜVENLİK | OTOMATİK TEHDİT KEŞFİ")
+    print(f"{Fore.YELLOW} \"{random.choice(ATATURK_SOZLERI)}\" {Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
 
 def usom_listesi_indir():
     """USOM kara listesini indirir."""
     print(f"\n{Fore.YELLOW}[+] USOM kara listesi indiriliyor...{Style.RESET_ALL}")
     try:
-        headers = {'User-Agent': 'AY-YILDIZ-SIBER-KALKAN/1.0.0'}
+        headers = {'User-Agent': 'VA-ATAN-SIBER-GUVENLIK/1.0.0'}
         r = requests.get(USOM_URL, timeout=30, headers=headers)
         r.raise_for_status()
         os.makedirs("data", exist_ok=True)
@@ -119,31 +130,51 @@ def url_bul():
     print(f"{Fore.GREEN}[✓] Toplam {len(url_listesi)} URL bulundu.{Style.RESET_ALL}")
     return url_listesi
 
-def url_tara(url):
+def url_tara(url, usom_listesi):
     """Tek bir URL'yi tarar."""
     try:
-        # USOM kontrolü
-        if os.path.exists(YEREL_LISTE):
-            with open(YEREL_LISTE, "r", encoding="utf-8") as f:
-                usom_listesi = f.read().splitlines()
-                if any(url.lower() in line.lower() for line in usom_listesi):
-                    return {"url": url, "sonuc": "TEHLİKE", "kaynak": "USOM"}
+        # Önce USOM listesinde kontrol et
+        if usom_listesi:
+            if any(url.lower() in line.lower() for line in usom_listesi):
+                return {"url": url, "sonuc": "TEHLİKE", "kaynak": "USOM_LİSTE", "durum": "ZATEN_LİSTEDE"}
         
-        # Basit URL analizi
-        if len(url) > 50:
-            return {"url": url, "sonuc": "ŞÜPHELİ", "kaynak": "UZUN_URL"}
-        
-        if url.count(".") > 3:
-            return {"url": url, "sonuc": "ŞÜPHELİ", "kaynak": "COK_NOKTA"}
-        
-        return {"url": url, "sonuc": "GÜVENLİ", "kaynak": "BASIT_KONTROL"}
+        # HTTP yanıt kontrolü (curl benzeri)
+        try:
+            if not url.startswith('http'):
+                url = 'https://' + url
+            r = requests.head(url, timeout=5, allow_redirects=True)
+            durum = f"HTTP {r.status_code}"
+            
+            if r.status_code == 200:
+                return {"url": url, "sonuc": "AÇIK", "kaynak": "CURL", "durum": durum}
+            elif r.status_code in [301, 302, 307, 308]:
+                return {"url": url, "sonuc": "YÖNLENDİRME", "kaynak": "CURL", "durum": durum}
+            elif r.status_code == 404:
+                return {"url": url, "sonuc": "KAPALI", "kaynak": "CURL", "durum": durum}
+            else:
+                return {"url": url, "sonuc": "ŞÜPHELİ", "kaynak": "CURL", "durum": durum}
+        except requests.exceptions.Timeout:
+            return {"url": url, "sonuc": "ZAMAN_AŞIMI", "kaynak": "CURL", "durum": "TIMEOUT"}
+        except requests.exceptions.ConnectionError:
+            return {"url": url, "sonuc": "BAĞLANTI_HATASI", "kaynak": "CURL", "durum": "CONNECTION_ERROR"}
+        except:
+            return {"url": url, "sonuc": "ERİŞİLEMEZ", "kaynak": "CURL", "durum": "UNREACHABLE"}
+            
     except:
-        return {"url": url, "sonuc": "HATA", "kaynak": "KONTROL_HATASI"}
+        return {"url": url, "sonuc": "HATA", "kaynak": "KONTROL_HATASI", "durum": "ERROR"}
 
-def coklu_tarama(url_listesi, max_thread=20):
+def coklu_tarama(url_listesi, usom_listesi=None, max_thread=20):
     """Multi-thread ile hızlı tarama."""
     print(f"\n{Fore.YELLOW}[+] {len(url_listesi)} URL taranıyor...{Style.RESET_ALL}")
     print(f"{Fore.CYAN}[i] Thread sayısı: {max_thread}{Style.RESET_ALL}")
+    
+    if usom_listesi is None:
+        usom_listesi = []
+        if os.path.exists(YEREL_LISTE):
+            with open(YEREL_LISTE, "r", encoding="utf-8") as f:
+                usom_listesi = f.read().splitlines()
+    
+    print(f"{Fore.CYAN}[i] USOM listesi: {len(usom_listesi)} URL{Style.RESET_ALL}")
     
     sonuclar = []
     tamamlanan = 0
@@ -153,7 +184,7 @@ def coklu_tarama(url_listesi, max_thread=20):
         nonlocal tamamlanan
         thread_sonuclar = []
         for url in urller:
-            sonuc = url_tara(url)
+            sonuc = url_tara(url, usom_listesi)
             thread_sonuclar.append(sonuc)
             with kilit:
                 tamamlanan += 1
@@ -181,45 +212,59 @@ def raporla(sonuclar):
     """Sonuçları raporlar."""
     print(f"\n{Fore.YELLOW}[+] Rapor oluşturuluyor...{Style.RESET_ALL}")
     
-    tehlikeler = [s for s in sonuclar if s["sonuc"] == "TEHLİKE"]
-    supheliler = [s for s in sonuclar if s["sonuc"] == "ŞÜPHELİ"]
-    guvenliler = [s for s in sonuclar if s["sonuc"] == "GÜVENLİ"]
+    usom_de = [s for s in sonuclar if s["sonuc"] == "TEHLİKE" and s["durum"] == "ZATEN_LİSTEDE"]
+    acik = [s for s in sonuclar if s["sonuc"] == "AÇIK"]
+    kapali = [s for s in sonuclar if s["sonuc"] == "KAPALI"]
+    yonlendirme = [s for s in sonuclar if s["sonuc"] == "YÖNLENDİRME"]
+    supheliler = [s for s in sonuclar if s["sonuc"] in ["ŞÜPHELİ", "ZAMAN_AŞIMI", "BAĞLANTI_HATASI", "ERİŞİLEMEZ"]]
     hatalar = [s for s in sonuclar if s["sonuc"] == "HATA"]
     
     print(f"\n{Fore.CYAN}{'='*80}")
     print(f"{Fore.WHITE} TARAMA RAPORU")
     print(f"{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
-    print(f"{Fore.RED}TEHLİKE: {len(tehlikeler)}{Style.RESET_ALL}")
-    print(f"{Fore.YELLOW}ŞÜPHELİ: {len(supheliler)}{Style.RESET_ALL}")
-    print(f"{Fore.GREEN}GÜVENLİ: {len(guvenliler)}{Style.RESET_ALL}")
+    print(f"{Fore.RED}USOM LİSTEDE: {len(usom_de)}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}AÇIK SİTELER: {len(acik)}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}KAPALI SİTELER: {len(kapali)}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}YÖNLENDİRME: {len(yonlendirme)}{Style.RESET_ALL}")
+    print(f"{Fore.RED}ŞÜPHELİ: {len(supheliler)}{Style.RESET_ALL}")
     print(f"{Fore.WHITE}HATA: {len(hatalar)}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*80}{Style.RESET_ALL}")
     
-    if tehlikeler:
-        print(f"\n{Fore.RED}[!] TEHLİKELİ SİTELER:{Style.RESET_ALL}")
-        for t in tehlikeler[:10]:
-            print(f"{Fore.RED}  - {t['url']} ({t['kaynak']}){Style.RESET_ALL}")
+    if acik:
+        print(f"\n{Fore.GREEN}[+] AÇIK SİTELER (USOM'de OLMAYAN):{Style.RESET_ALL}")
+        for a in acik[:20]:
+            print(f"{Fore.GREEN}  - {a['url']} ({a['durum']}){Style.RESET_ALL}")
     
-    if supheliler:
-        print(f"\n{Fore.YELLOW}[!] ŞÜPHELİ SİTELER:{Style.RESET_ALL}")
-        for s in supheliler[:10]:
-            print(f"{Fore.YELLOW}  - {s['url']} ({s['kaynak']}){Style.RESET_ALL}")
+    if yonlendirme:
+        print(f"\n{Fore.CYAN}[+] YÖNLENDİRME YAPAN SİTELER:{Style.RESET_ALL}")
+        for y in yonlendirme[:10]:
+            print(f"{Fore.CYAN}  - {y['url']} ({y['durum']}){Style.RESET_ALL}")
+    
+    if usom_de:
+        print(f"\n{Fore.RED}[!] USOM LİSTEDE OLANLAR (TARANMADI):{Style.RESET_ALL}")
+        for u in usom_de[:10]:
+            print(f"{Fore.RED}  - {u['url']}{Style.RESET_ALL}")
     
     # Dosyaya kaydet
     os.makedirs("raporlar", exist_ok=True)
     with open(RAPOR_DOSYASI, "w", encoding="utf-8") as f:
         f.write("OTOMATİK TARAMA RAPORU\n")
         f.write("="*80 + "\n\n")
-        f.write(f"TEHLİKE: {len(tehlikeler)}\n")
+        f.write(f"USOM LİSTEDE: {len(usom_de)}\n")
+        f.write(f"AÇIK SİTELER: {len(acik)}\n")
+        f.write(f"KAPALI SİTELER: {len(kapali)}\n")
+        f.write(f"YÖNLENDİRME: {len(yonlendirme)}\n")
         f.write(f"ŞÜPHELİ: {len(supheliler)}\n")
-        f.write(f"GÜVENLİ: {len(guvenliler)}\n")
         f.write(f"HATA: {len(hatalar)}\n\n")
-        f.write("TEHLİKELİ SİTELER:\n")
-        for t in tehlikeler:
-            f.write(f"  - {t['url']} ({t['kaynak']})\n")
-        f.write("\nŞÜPHELİ SİTELER:\n")
-        for s in supheliler:
-            f.write(f"  - {s['url']} ({s['kaynak']})\n")
+        f.write("AÇIK SİTELER (USOM'de OLMAYAN):\n")
+        for a in acik:
+            f.write(f"  - {a['url']} ({a['durum']})\n")
+        f.write("\nYÖNLENDİRME YAPAN SİTELER:\n")
+        for y in yonlendirme:
+            f.write(f"  - {y['url']} ({y['durum']})\n")
+        f.write("\nUSOM LİSTEDE OLANLAR:\n")
+        for u in usom_de:
+            f.write(f"  - {u['url']}\n")
     
     print(f"\n{Fore.GREEN}[✓] Rapor kaydedildi: {RAPOR_DOSYASI}{Style.RESET_ALL}")
 
