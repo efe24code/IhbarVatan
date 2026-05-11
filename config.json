@@ -1,0 +1,24 @@
+{
+    "version": "5.1.0",
+    "usom_url": "https://www.usom.gov.tr/url-list.txt",
+    "phishtank_api": "https://checkurl.phishtank.com/checkurl/",
+    "thresholds": {
+        "ssl_warning_days": 90,
+        "ssl_critical_days": 30,
+        "domain_critical_days": 30,
+        "domain_warning_days": 90
+    },
+    "suspicious_countries": ["RU", "CN", "KP", "IR", "NG", "PK"],
+    "trusted_ca": [
+        "DigiCert",
+        "Let's Encrypt",
+        "GlobalSign",
+        "Sectigo",
+        "GoDaddy",
+        "Google Trust Services",
+        "Amazon",
+        "Cloudflare",
+        "Microsoft",
+        "Apple"
+    ]
+}
